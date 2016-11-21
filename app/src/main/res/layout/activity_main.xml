@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/sky_background">
+
+    <Button
+        android:id="@+id/daum_search_button"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:text="현재위치 길찾기"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="#FFE400"
+        android:background="@drawable/daum_map_button" />
+
+    <Button
+        android:id="@+id/youtube_search_button"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:text="유튜브 검색"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="#1D8B15"
+        android:background="@drawable/youtube_button" />
+
+    <Button
+        android:id="@+id/notice_board_button"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:text="맛집 게시판"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:background="@drawable/list_button" />
+
+    <Button
+        android:id="@+id/search_engine_button"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:text="검색 엔진"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:background="@drawable/search_engine_1" />
+
+    <Button
+        android:id="@+id/event_button"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:text="이 벤 트"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:background="@drawable/event" />
+
+</LinearLayout>

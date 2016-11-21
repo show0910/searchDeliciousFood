@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="useschemeurl.com.example.choi.deliciousfoodsearch">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/delicious_food"
+        android:label="맛집 나와!"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".FrontScreenActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name=".PlayYouTube"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+
+        <activity
+            android:name=".SearchYouTube"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="delicioustour"
+                    android:host="youtube" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".SearchDaumMap"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+
+        <activity
+            android:name=".SearchEngine"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+
+        <activity
+            android:name=".NoticeBoardAnother"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+
+            <!--android:theme="@android:style/Theme.NoTitleBar">-->
+        </activity>
+
+        <activity
+            android:name=".NoticeBoard"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+
+        <activity
+            android:name=".EventBoard"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+
+        <activity
+            android:name=".EventBoardAnother"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+
+        <activity android:name=".CalanderActivity"></activity>
+
+    </application>
+</manifest>

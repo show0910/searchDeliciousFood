@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:cacheColorHint="#EAEAEA">
+
+        <ImageView
+            android:id="@+id/iconItem"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical" />
+
+        <LinearLayout
+            android:id="@+id/layoutList"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="70dp">
+
+            <TextView
+                android:id="@+id/dataTitle"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:gravity="left"
+                android:elegantTextHeight="false"
+                android:textColor="#FFBB00"
+                android:textSize="25dp"
+                android:layout_marginLeft="10dp" />
+
+            <RatingBar
+                android:id="@+id/ratingPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:gravity="left"
+                android:numStars="5"
+                android:isIndicator="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                style="?android:attr/ratingBarStyleSmall" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/validCheckBox"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical" />
+
+    </LinearLayout>
+
+</LinearLayout>
