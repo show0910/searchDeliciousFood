@@ -45,6 +45,7 @@ public class NoticeBoardAnother extends AppCompatActivity {
     Button inputButton;
     ImageView imageView1;
     String imagePath = null;
+    String degree = "0";
     ArrayList<String> titleList;
 
     public static final int REQUEST_IMAGE_CAPTURE = 1003;
@@ -74,13 +75,21 @@ public class NoticeBoardAnother extends AppCompatActivity {
             editTextContents.setText(getIntent().getStringExtra("contents"));
             imagePath = getIntent().getStringExtra("imagePath");
 
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 8;
-
             if (imagePath != null) {
+
+                int degreeInt = 0;
+
+                degree = String.valueOf(degreeInt);
+
+                degreeInt = getPhotoOrientationDegree(imagePath);
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 8;
+
                 File file = new File(imagePath);
                 if (file.exists() == true) {
                     Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
+                    bitmap = getRotatedBitmap(bitmap, degreeInt);
                     imageView1.setImageBitmap(bitmap);
                 } else {
                     Drawable drawable = getResources().getDrawable(R.drawable.touching);
@@ -90,6 +99,8 @@ public class NoticeBoardAnother extends AppCompatActivity {
                 Drawable drawable = getResources().getDrawable(R.drawable.touching);
                 imageView1.setImageDrawable(drawable);
             }
+
+
         }
 
         //View시 Data 세팅 수정 X
@@ -104,15 +115,24 @@ public class NoticeBoardAnother extends AppCompatActivity {
             ratingPoint.setRating(getIntent().getFloatExtra("point", 3));
             editTextContents.setText(getIntent().getStringExtra("contents"));
 
-            String path = getIntent().getStringExtra("imagePath");
+            String imagePath = getIntent().getStringExtra("imagePath");
 
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 8;
 
-            if (path != null) {
-                File file = new File(path);
+            if (imagePath != null) {
+
+                int degreeInt = 0;
+
+                degree = String.valueOf(degreeInt);
+
+                degreeInt = getPhotoOrientationDegree(imagePath);
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 8;
+
+                File file = new File(imagePath);
                 if (file.exists() == true) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
+                    bitmap = getRotatedBitmap(bitmap, degreeInt);
                     imageView1.setImageBitmap(bitmap);
                 } else {
                     Drawable drawable = getResources().getDrawable(R.drawable.no_image);
@@ -201,6 +221,7 @@ public class NoticeBoardAnother extends AppCompatActivity {
                 resultIntent.putExtra("contents", editTextContents.getText().toString());
                 resultIntent.putExtra("point", ratingPoint.getRating());
                 resultIntent.putExtra("imagePath", imagePath);
+                resultIntent.putExtra("degree", degree);
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }
@@ -215,6 +236,12 @@ public class NoticeBoardAnother extends AppCompatActivity {
         Date date = new Date(now);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String strNow = dateFormat.format(date);
+
+        File file = new File(Environment.getExternalStorageDirectory() + "/DCIM/DeliciousFood/");
+
+        if (!file.exists()) {
+            file.mkdirs();
+        }
 
         String imageFileName = strNow + ".jpg";
         File curFile = new File(Environment.getExternalStorageDirectory() + "/DCIM/DeliciousFood/", imageFileName);
@@ -257,25 +284,15 @@ public class NoticeBoardAnother extends AppCompatActivity {
             if (file != null) {
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 
-                ExifInterface exif = null;
-                int degree = 0;
+                int degreeInt = 0;
 
-                try {
-                    exif = new ExifInterface(file.getAbsolutePath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
-
-                if (orientation == 6) {
-                    degree = 90;
-                }
-
-                bitmap = getRotatedBitmap(bitmap, degree);
+                degreeInt = getPhotoOrientationDegree(file.getAbsolutePath());
+                bitmap = getRotatedBitmap(bitmap, degreeInt);
 
                 imagePath = file.getAbsolutePath();
                 imageView1.setImageBitmap(bitmap);
+
+                degree = String.valueOf(degreeInt);
 
             } else {
                 Toast.makeText(getApplicationContext(), "File is null.", Toast.LENGTH_LONG).show();
@@ -287,24 +304,14 @@ public class NoticeBoardAnother extends AppCompatActivity {
             imagePath = getPath(data.getData());
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
 
-            ExifInterface exif = null;
-            int degree = 0;
+            int degreeInt = 0;
 
-            try {
-                exif = new ExifInterface(imagePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
-
-            if (orientation == 6) {
-                degree = 90;
-            }
-
-            bitmap = getRotatedBitmap(bitmap, degree);
+            degreeInt = getPhotoOrientationDegree(imagePath);
+            bitmap = getRotatedBitmap(bitmap, degreeInt);
 
             imageView1.setImageBitmap(bitmap);
+
+            degree = String.valueOf(degreeInt);
         }
     }
 

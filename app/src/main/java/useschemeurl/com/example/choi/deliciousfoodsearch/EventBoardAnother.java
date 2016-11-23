@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -35,6 +36,7 @@ public class EventBoardAnother extends AppCompatActivity {
     Button inputButton;
     Spinner cmbTime;
     EditText editShopName;
+    ArrayList<String> titleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,9 @@ public class EventBoardAnother extends AppCompatActivity {
         cmbTime = (Spinner) findViewById(R.id.cmbTime);
         editShopName = (EditText) findViewById(R.id.editShopName);
 
+        if (getIntent().getStringExtra("usage").equals("insert")) {
+            titleList = getIntent().getStringArrayListExtra("titleList");
+        }
 
         final Spinner cmbTime = (Spinner) findViewById(R.id.cmbTime);
         ArrayAdapter timeAdapter = ArrayAdapter.createFromResource(this, R.array.hours, android.R.layout.simple_spinner_item);
@@ -121,6 +126,8 @@ public class EventBoardAnother extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                boolean numValid = false;
+
                 if (TextUtils.isEmpty(editTitle.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "제목을 입력해 주세요!!", Toast.LENGTH_LONG).show();
                     return;
@@ -128,6 +135,36 @@ public class EventBoardAnother extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(editTime.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "마감 시간을 입력해 주세요!!!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(editShopName.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "가게 이름을 입력해 주세요!!!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(editAddress.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "가게 주소를 입력해 주세요!!!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(editContents.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "이벤트 내용을 입력해 주세요!!!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (getIntent().getStringExtra("usage").equals("insert")) {
+                    if (titleList.size() != 0) {
+                        for (String title : titleList) {
+                            if (title.equals(editTitle.getText().toString())) {
+                                Toast.makeText(getApplicationContext(), "동일한 제목이 이미 있습니다!!!", Toast.LENGTH_LONG).show();
+                                numValid = true;
+                            }
+                        }
+                    }
+                }
+
+                if (numValid) {
                     return;
                 }
 

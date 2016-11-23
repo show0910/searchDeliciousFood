@@ -57,35 +57,36 @@ public class NoticeBoard extends AppCompatActivity {
 
         final ArrayList<Integer> list = new ArrayList<Integer>();
 
-        mPref = getSharedPreferences("searchDelicious10", MODE_PRIVATE);
+        mPref = getSharedPreferences("searchDeliciousNoticeBoard", MODE_PRIVATE);
         editor = mPref.edit();
 
         adapter = new IconTextListAdapter(this);
-        Resources res = getResources();
 
         allTitle = mPref.getString("title", null);
 
         if (allTitle != null) {
             //각각의 제목을 가져온다.
-            String[] allTitle1 = allTitle.split("\\^");
+            String[] allTitle1 = allTitle.split("\\^\\&\\(");
 
             for (int i = 0; i < allTitle1.length; i++) {
                 String title = allTitle1[i];
                 String contents = null;
                 String path = null;
                 String otherStr = mPref.getString(title, null);
-                String[] others = otherStr.split("\\^");
+                String degree = null;
+                String[] others = otherStr.split("\\^\\&\\(");
 
                 float point = Float.parseFloat(others[0]);
                 contents = others[1];
 
-                if (others.length == 3) {
+                if (others.length > 2) {
                     path = others[2];
+                    degree = others[3];
                 } else {
                     path = null;
                 }
 
-                adapter.addItem(new IconTextItem(title, point, contents, path));
+                adapter.addItem(new IconTextItem(title, point, contents, path, degree));
             }
             listView01.setAdapter(adapter);
         }
@@ -131,6 +132,7 @@ public class NoticeBoard extends AppCompatActivity {
                 intent.putExtra("contents", item.getData(1));
                 intent.putExtra("point", item.getmPoint());
                 intent.putExtra("imagePath", item.getmImagePath());
+                intent.putExtra("degree", item.getDegree());
 
                 startActivityForResult(intent, REQUEST_CODE_UPDATE);
             }
@@ -151,7 +153,7 @@ public class NoticeBoard extends AppCompatActivity {
                         if (delTitle == null) {
                             delTitle = ((IconTextItem) adapter.getItem(i)).getData(0);
                         } else {
-                            delTitle = delTitle + "^" + ((IconTextItem) adapter.getItem(i)).getData(0);
+                            delTitle = delTitle + "^&(" + ((IconTextItem) adapter.getItem(i)).getData(0);
                         }
                     }
                 }
@@ -172,8 +174,8 @@ public class NoticeBoard extends AppCompatActivity {
                                 adapter.delView(list);
                                 listView01.setAdapter(adapter);
 
-                                String[] delTitle1 = delTitleList.split("\\^");
-                                String[] allTitle1 = allTitle.split("\\^");
+                                String[] delTitle1 = delTitleList.split("\\^\\&\\(");
+                                String[] allTitle1 = allTitle.split("\\^\\&\\(");
                                 allTitle = null;
 
                                 for (int i = 0; i < allTitle1.length; i++) {
@@ -188,7 +190,7 @@ public class NoticeBoard extends AppCompatActivity {
                                         if (allTitle == null) {
                                             allTitle = allTitle1[i];
                                         } else {
-                                            allTitle = allTitle + "^" + allTitle1[i];
+                                            allTitle = allTitle + "^&(" + allTitle1[i];
                                         }
                                     }
                                 }
@@ -240,21 +242,20 @@ public class NoticeBoard extends AppCompatActivity {
 
         if (requestCode == REQUEST_CODE_INSERT && resultCode == RESULT_OK) {
 
-            Resources res = getResources();
-
             String title = data.getStringExtra("title");
             String contents = data.getStringExtra("contents");
             float point = data.getFloatExtra("point", 3);
             String path = data.getStringExtra("imagePath");
+            String degree = data.getStringExtra("degree");
             String saveStr = null;
 
             if (path == null) {
-                saveStr = String.valueOf(point) + "^" + contents;
+                saveStr = String.valueOf(point) + "^&(" + contents;
             } else {
-                saveStr = String.valueOf(point) + "^" + contents + "^" + path;
+                saveStr = String.valueOf(point) + "^&(" + contents + "^&(" + path + "^&(" + degree;
             }
 
-            adapter.addItem(new IconTextItem(title, point, contents, path));
+            adapter.addItem(new IconTextItem(title, point, contents, path, degree));
 
             listView01.setAdapter(adapter);
 
@@ -264,7 +265,7 @@ public class NoticeBoard extends AppCompatActivity {
             if (allTitle == null) {
                 allTitle = title;
             } else {
-                allTitle = allTitle + "^" + title;
+                allTitle = allTitle + "^&(" + title;
             }
 
             editor.putString("title", allTitle);
@@ -283,13 +284,14 @@ public class NoticeBoard extends AppCompatActivity {
             String contents = data.getStringExtra("contents");
             float point = data.getFloatExtra("point", 3);
             String path = data.getStringExtra("imagePath");
+            String degree = data.getStringExtra("degree");
 
             String saveStr = null;
 
             if (path == null) {
-                saveStr = String.valueOf(point) + "^" + contents;
+                saveStr = String.valueOf(point) + "^&(" + contents;
             } else {
-                saveStr = String.valueOf(point) + "^" + contents + "^" + path;
+                saveStr = String.valueOf(point) + "^&(" + contents + "^&(" + path + "^&(" + degree;
             }
 
             ((IconTextItem) adapter.getItem(posForUpdate)).setData(curData);
@@ -299,6 +301,8 @@ public class NoticeBoard extends AppCompatActivity {
             ((IconTextItem) adapter.getItem(posForUpdate)).setmSelectValid(false);
 
             ((IconTextItem) adapter.getItem(posForUpdate)).setmImagePath(path);
+
+            ((IconTextItem) adapter.getItem(posForUpdate)).setDegree(degree);
 
             listView01.setAdapter(adapter);
 

@@ -2,6 +2,7 @@ package useschemeurl.com.example.choi.deliciousfoodsearch;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,10 @@ public class EventBoard extends AppCompatActivity {
     Button delListButton;
     Button updateListButton;
     int posForUpdate;
+    String allTitle;
+
+    SharedPreferences mPref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +50,35 @@ public class EventBoard extends AppCompatActivity {
         delListButton = (Button) findViewById(R.id.delListButton);
         updateListButton = (Button) findViewById(R.id.updateListButton);
 
+        mPref = getSharedPreferences("searchDeliciousEventBoard", MODE_PRIVATE);
+        editor = mPref.edit();
+
         adapter = new EventTextListAdapter(this);
+
+        //기존 Data 불러오기
+        allTitle = mPref.getString("title", null);
+
+        if (allTitle != null) {
+            //전체 제목을 가져온다.
+            String[] allTitle1 = allTitle.split("\\^\\&\\(");
+
+            for (int i = 0; i < allTitle1.length; i++) {
+                String title = allTitle1[i];
+
+                //전체 title 이름 가져오기
+                String otherStr = mPref.getString(title, null);
+                String[] others = otherStr.split("\\^\\&\\(");
+
+                String time = others[0];
+                String hour = others[1];
+                String shopName = others[2];
+                String address = others[3];
+                String contents = others[4];
+
+                adapter.addItem(new EventTextItem(title, address, time, contents, hour, shopName));
+            }
+            listView01.setAdapter(adapter);
+        }
 
         addListButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +86,7 @@ public class EventBoard extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), EventBoardAnother.class);
                 intent.putExtra("usage", "insert");
+                intent.putStringArrayListExtra("titleList", adapter.getAllTitle());
                 startActivityForResult(intent, REQUEST_CODE_INSERT);
 
             }
@@ -99,6 +133,7 @@ public class EventBoard extends AppCompatActivity {
 
                 list.clear();
                 String delTitle = null;
+                final String delTitleList;
 
                 for (int i = 0; i < adapter.getCount(); i++) {
                     if (((EventTextItem) adapter.getItem(i)).getSelectValid()) {
@@ -106,7 +141,7 @@ public class EventBoard extends AppCompatActivity {
                         if (delTitle == null) {
                             delTitle = ((EventTextItem) adapter.getItem(i)).getData(0);
                         } else {
-                            delTitle = delTitle + "^" + ((EventTextItem) adapter.getItem(i)).getData(0);
+                            delTitle = delTitle + "^&(" + ((EventTextItem) adapter.getItem(i)).getData(0);
                         }
                     }
                 }
@@ -116,12 +151,46 @@ public class EventBoard extends AppCompatActivity {
                     return;
                 }
 
+                delTitleList = delTitle;
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(EventBoard.this);
                 builder.setMessage("선택된 리스트를 삭제하시겠습니까??").setCancelable(false)
                         .setPositiveButton("삭제!!", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 adapter.delView(list);
                                 listView01.setAdapter(adapter);
+
+                                String[] delTitle1 = delTitleList.split("\\^\\&\\(");
+                                String[] allTitle1 = allTitle.split("\\^\\&\\(");
+                                allTitle = null;
+
+                                for (int i = 0; i < allTitle1.length; i++) {
+                                    int numValid = 0;
+                                    for (int j = 0; j < delTitle1.length; j++) {
+                                        if (allTitle1[i].equals(delTitle1[j])) {
+                                            numValid = 1;
+                                        }
+                                    }
+
+                                    if (numValid == 0) {
+                                        if (allTitle == null) {
+                                            allTitle = allTitle1[i];
+                                        } else {
+                                            allTitle = allTitle + "^&(" + allTitle1[i];
+                                        }
+                                    }
+                                }
+
+                                editor.putString("title", allTitle);
+
+                                editor.commit();
+
+                                for (int i = 0; i < delTitle1.length; i++) {
+                                    editor.remove(delTitle1[i]);
+                                }
+
+                                editor.commit();
+
                             }
                         }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -139,37 +208,59 @@ public class EventBoard extends AppCompatActivity {
 
         if (requestCode == REQUEST_CODE_INSERT && resultCode == RESULT_OK) {
 
-            String[] curData = new String[6];
 
-            curData[0] = data.getStringExtra("title");
-            curData[1] = data.getStringExtra("address");
-            curData[2] = data.getStringExtra("time");
-            curData[3] = data.getStringExtra("contents");
-            curData[4] = data.getStringExtra("hour");
-            curData[5] = data.getStringExtra("shopName");
+            String title = data.getStringExtra("title");
+            String address = data.getStringExtra("address");
+            String time = data.getStringExtra("time");
+            String contents = data.getStringExtra("contents");
+            String hour = data.getStringExtra("hour");
+            String shopName = data.getStringExtra("shopName");
+            String saveStr = null;
 
-            adapter.addItem(new EventTextItem(curData));
+            adapter.addItem(new EventTextItem(title, address, time, contents, hour, shopName));
 
             listView01.setAdapter(adapter);
 
-            Toast.makeText(getApplicationContext(), "Data 입력 완료", Toast.LENGTH_SHORT).show();
+            saveStr = time + "^&(" + hour + "^&(" + shopName + "^&(" + address + "^&(" + contents;
+
+            //각각 리스트 뷰 제목 저장
+            editor.putString(title, saveStr);
+
+            if (allTitle == null) {
+                allTitle = title;
+            } else {
+                allTitle = allTitle + "^&(" + title;
+            }
+
+            editor.putString("title", allTitle);
+
+            editor.commit();
+
         } else if (requestCode == REQUEST_CODE_UPDATE && resultCode == RESULT_OK) {
 
-            String[] curData = new String[6];
+            String title = data.getStringExtra("title");
+            String address = data.getStringExtra("address");
+            String time = data.getStringExtra("time");
+            String contents = data.getStringExtra("contents");
+            String hour = data.getStringExtra("hour");
+            String shopName = data.getStringExtra("shopName");
+            String saveStr = null;
 
-            curData[0] = data.getStringExtra("title");
-            curData[1] = data.getStringExtra("address");
-            curData[2] = data.getStringExtra("time");
-            curData[3] = data.getStringExtra("contents");
-            curData[4] = data.getStringExtra("hour");
-            curData[5] = data.getStringExtra("shopName");
-
-            ((EventTextItem) adapter.getItem(posForUpdate)).setData(curData);
+            ((EventTextItem) adapter.getItem(posForUpdate)).setDataIdx(0, title);
+            ((EventTextItem) adapter.getItem(posForUpdate)).setDataIdx(1, address);
+            ((EventTextItem) adapter.getItem(posForUpdate)).setDataIdx(2, time);
+            ((EventTextItem) adapter.getItem(posForUpdate)).setDataIdx(3, contents);
+            ((EventTextItem) adapter.getItem(posForUpdate)).setDataIdx(4, hour);
+            ((EventTextItem) adapter.getItem(posForUpdate)).setDataIdx(5, shopName);
             ((EventTextItem) adapter.getItem(posForUpdate)).setSelectValid(false);
 
             listView01.setAdapter(adapter);
 
-            Toast.makeText(getApplicationContext(), "Data 수정 완료", Toast.LENGTH_SHORT).show();
+            saveStr = time + "^&(" + hour + "^&(" + shopName + "^&(" + address + "^&(" + contents;
+
+            editor.putString(title, saveStr);
+            editor.commit();
+
         }
     }
 

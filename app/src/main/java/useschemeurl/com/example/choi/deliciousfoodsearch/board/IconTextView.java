@@ -40,7 +40,7 @@ public class IconTextView extends LinearLayout {
         inflater.inflate(R.layout.notice_board_list_view, this, true);
 
         mIcon = (ImageView) findViewById(R.id.iconItem);
-        setImage(aItem.getmImagePath());
+        setImage(aItem.getmImagePath(), aItem.getDegree());
 
         mText01 = (TextView) findViewById(R.id.dataTitle);
         mText01.setText(aItem.getData(0));
@@ -66,7 +66,7 @@ public class IconTextView extends LinearLayout {
         ratingPoint.setRating(point);
     }
 
-    public void setImage(String path) {
+    public void setImage(String path, String degree) {
         BitmapFactory.Options options = new BitmapFactory.Options();
 //        options.inSampleSize = 8;
 
@@ -81,7 +81,7 @@ public class IconTextView extends LinearLayout {
                     fileName = path.substring(32);
                 }
 
-                Bitmap bitmap1 = createThumbnail(bitmap, fileName);
+                Bitmap bitmap1 = createThumbnail(bitmap, fileName, degree);
                 mIcon.setImageBitmap(bitmap1);
             } else {
                 Drawable drawable = getResources().getDrawable(R.drawable.no_image);
@@ -99,12 +99,12 @@ public class IconTextView extends LinearLayout {
 
     // Bitmap to File
 //bitmap에는 비트맵, strFilePath에 는 파일을 저장할 경로, strFilePath 에는 파일 이름을 할당해주면 됩니다.
-    public static Bitmap createThumbnail(Bitmap bitmap, String filename) {
+    public static Bitmap createThumbnail(Bitmap bitmap, String filename, String degree) {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         String strFilePath = "/storage/emulated/0/DCIM/DeliciousFood/thumnail/";
 
-        int degree = getPhotoOrientationDegree(strFilePath + filename);
+        int degreeInt = Integer.parseInt(degree);
 
         File file = new File(strFilePath);
 
@@ -127,7 +127,7 @@ public class IconTextView extends LinearLayout {
 //                bitmap = Bitmap.createScaledBitmap(bitmap, 160, height/(width/160), true);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 154, 122, true);
 
-                bitmap = getRotatedBitmap(bitmap, degree);
+                bitmap = getRotatedBitmap(bitmap, degreeInt);
 
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
@@ -147,38 +147,6 @@ public class IconTextView extends LinearLayout {
         }
 
         return bitmap;
-    }
-
-    //사진의 각도 알아오기
-    public synchronized static int getPhotoOrientationDegree(String filepath) {
-        int degree = 0;
-        ExifInterface exif = null;
-
-        try {
-            exif = new ExifInterface(filepath);
-        } catch (IOException e) {
-        }
-
-        if (exif != null) {
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
-            if (orientation != -1) {
-                switch (orientation) {
-                    case ExifInterface.ORIENTATION_ROTATE_90:
-                        degree = 90;
-                        break;
-
-                    case ExifInterface.ORIENTATION_ROTATE_180:
-                        degree = 180;
-                        break;
-
-                    case ExifInterface.ORIENTATION_ROTATE_270:
-                        degree = 270;
-                        break;
-                }
-
-            }
-        }
-        return degree;
     }
 
     public synchronized static Bitmap getRotatedBitmap(Bitmap bitmap, int degrees) {

@@ -12,22 +12,25 @@ public class IconTextItem {
     private String[] mData;
     private float mPoint;
     private String mImagePath = null;
+    private String degree = null;
     private boolean mSelectable = true;
     private boolean mSelectValid = false;
 
-    public IconTextItem(String[] obj, float point, String path) {
+    public IconTextItem(String[] obj, float point, String path, String degree) {
         mData = obj;
         mPoint = point;
         mImagePath = path;
+        this.degree = degree;
     }
 
-    public IconTextItem(String title, float point, String contents, String path) {
+    public IconTextItem(String title, float point, String contents, String path, String degree) {
         mData = new String[2];
         mData[0] = title;
         mData[1] = contents;
 
         mPoint = point;
         mImagePath = path;
+        this.degree = degree;
     }
 
     public boolean ismSelectable() {
@@ -75,6 +78,14 @@ public class IconTextItem {
 
     public String getmImagePath() {
         return mImagePath;
+    }
+
+    public String getDegree() {
+        return this.degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
     }
 
     public void setIcon(Drawable Icon) {

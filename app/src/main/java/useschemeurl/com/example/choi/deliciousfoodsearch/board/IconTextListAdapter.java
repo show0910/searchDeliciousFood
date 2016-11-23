@@ -92,7 +92,7 @@ public class IconTextListAdapter extends BaseAdapter {
             itemView.setIcon(mItems.get(position).getIcon());
             itemView.setText(0, mItems.get(position).getData(0));
             itemView.setRatingPoint(mItems.get(position).getmPoint());
-            itemView.setImage(mItems.get(position).getmImagePath());
+            itemView.setImage(mItems.get(position).getmImagePath(), mItems.get(position).getDegree());
         }
 
         if (mItems.get(position).ismSelectValid()) {
