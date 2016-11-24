@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -182,6 +184,7 @@ public class EventTextListAdapter extends BaseAdapter {
 
         calcThread = new CalcThread(nowTime + (hour * 1000), mHandler);
         calcThread.start();
+
 
         return itemView;
     }
