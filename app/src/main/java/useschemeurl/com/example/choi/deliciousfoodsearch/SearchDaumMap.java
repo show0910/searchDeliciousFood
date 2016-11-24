@@ -125,54 +125,6 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
             mainBanner.setText("가게이름&주소 찾기");
         }
 
-        //현재위치 지도에 표시
-//        currentButton.setOnClickListener(new View.OnClickListener(){
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                //GPS로부터 현재위치 가지고 오는 메소드
-//                if ( startLocationService() == 1) {
-//                    return;
-//                }
-//
-//                MapPoint MAP_POINT_HOME = MapPoint.mapPointWithGeoCoord(currentLatitude,currentLongitude);
-//                CameraPosition CAMERA_POSITION_HOME = new CameraPosition(MapPoint.mapPointWithGeoCoord(currentLatitude, currentLongitude), 2);
-//
-//                mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(CAMERA_POSITION_HOME), 1000, new CancelableCallback() {
-//                    @Override
-//                    public void onFinish() {
-////                        Toast.makeText(getBaseContext(), "Move to CurrentPosition complete", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onCancel() {
-//                        Toast.makeText(getBaseContext(), "Move to CurrentPosition canceled", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//                if ( poiItemHome != null) {
-//                    mMapView.removePOIItem(poiItemHome);
-//                }
-//
-//                Item itemHome = new Item();
-//
-//                poiItemHome = new MapPOIItem();
-//                poiItemHome.setItemName("현재 위치");
-//                poiItemHome.setTag(16);
-//                poiItemHome.setMapPoint(MAP_POINT_HOME);
-//                poiItemHome.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-//                poiItemHome.setCustomImageResourceId(R.drawable.map_pin_red);
-//                poiItemHome.setCustomImageAutoscale(false);
-//                poiItemHome.setCustomImageAnchor(0.5f, 1.0f);
-//                mMapView.addPOIItem(poiItemHome);
-//
-//                itemHome.title = poiItemHome.getItemName();
-//                mTagItemMap.put(poiItemHome.getTag(), itemHome);
-//                mMapView.selectPOIItem(poiItemHome, false);
-//            }
-//        });
-
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -597,6 +549,16 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
             targetLatitude = mapPOIItem.getMapPoint().getMapPointGeoCoord().latitude;
             targetLongitude = mapPOIItem.getMapPoint().getMapPointGeoCoord().longitude;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Intent resultIntent = getIntent();
+
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 
     @Override
