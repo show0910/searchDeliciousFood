@@ -21,6 +21,8 @@ import java.io.OutputStream;
 
 import useschemeurl.com.example.choi.deliciousfoodsearch.R;
 
+import static android.R.attr.bitmap;
+
 /**
  * Created by Choi on 2016-11-08.
  */
@@ -67,13 +69,12 @@ public class IconTextView extends LinearLayout {
     }
 
     public void setImage(String path, String degree) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inSampleSize = 8;
 
         if (path != null) {
             File file = new File(path);
             if (file.exists() == true) {
-                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+
+                //이미지 이름
                 String fileName = null;
                 if (path.contains("DeliciousFood")) {
                     fileName = path.substring(39);
@@ -81,8 +82,8 @@ public class IconTextView extends LinearLayout {
                     fileName = path.substring(32);
                 }
 
-                Bitmap bitmap1 = createThumbnail(bitmap, fileName, degree);
-                mIcon.setImageBitmap(bitmap1);
+                Bitmap bitmap = createThumbnail(path, fileName, degree);
+                mIcon.setImageBitmap(bitmap);
             } else {
                 Drawable drawable = getResources().getDrawable(R.drawable.no_image);
                 mIcon.setImageDrawable(drawable);
@@ -99,19 +100,24 @@ public class IconTextView extends LinearLayout {
 
     // Bitmap to File
 //bitmap에는 비트맵, strFilePath에 는 파일을 저장할 경로, strFilePath 에는 파일 이름을 할당해주면 됩니다.
-    public static Bitmap createThumbnail(Bitmap bitmap, String filename, String degree) {
+    public static Bitmap createThumbnail(String path, String filename, String degree) {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
+
         String strFilePath = "/storage/emulated/0/DCIM/DeliciousFood/thumnail/";
 
         int degreeInt = Integer.parseInt(degree);
 
         File file = new File(strFilePath);
+        File noMediaFile = new File(strFilePath + ".nomedia");
 
-        // If no folders
+        // 경로에 폴더나 .nomedia폴더가 없으면 만들어라라
         if (!file.exists()) {
             file.mkdirs();
-            // Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+        }
+
+        if (!noMediaFile.exists()) {
+            noMediaFile.mkdir();
         }
 
         File fileCacheItem = new File(strFilePath + filename);
@@ -119,32 +125,28 @@ public class IconTextView extends LinearLayout {
 
         try {
             if (!fileCacheItem.exists()) {
-                int height = bitmap.getHeight();
-                int width = bitmap.getWidth();
-
                 fileCacheItem.createNewFile();
-                out = new FileOutputStream(fileCacheItem); //160 부분을 자신이 원하는 크기로 변경할 수 있습니다.
-//                bitmap = Bitmap.createScaledBitmap(bitmap, 160, height/(width/160), true);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 154, 122, true);
+                out = new FileOutputStream(fileCacheItem);
 
+                //이미지를 가져와서
+                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+                //돌리고
                 bitmap = getRotatedBitmap(bitmap, degreeInt);
-
+                //Size조절 해주고
+                bitmap = Bitmap.createScaledBitmap(bitmap, 154, 122, true);
+                //JPEG 파일로 저장해준다.
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
-                return BitmapFactory.decodeFile(strFilePath + filename, options);
+                return bitmap;
             } else {
                 return BitmapFactory.decodeFile(strFilePath + filename, options);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                out.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
+
+        Bitmap bitmap = null;
 
         return bitmap;
     }

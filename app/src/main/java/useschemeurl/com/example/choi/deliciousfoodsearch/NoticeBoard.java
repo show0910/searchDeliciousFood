@@ -42,6 +42,8 @@ public class NoticeBoard extends AppCompatActivity {
     int posForUpdate;
     String allTitle;
 
+
+    int num = 1;
     SharedPreferences mPref;
     SharedPreferences.Editor editor;
 
@@ -87,8 +89,9 @@ public class NoticeBoard extends AppCompatActivity {
                 }
 
                 adapter.addItem(new IconTextItem(title, point, contents, path, degree));
-            }
+                }
             listView01.setAdapter(adapter);
+
         }
 
         addListButton.setOnClickListener(new View.OnClickListener() {
