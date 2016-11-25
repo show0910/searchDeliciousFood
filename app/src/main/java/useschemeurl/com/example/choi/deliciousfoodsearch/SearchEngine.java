@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ public class SearchEngine extends Activity {
     Button naverSearch;
     Button daumSearch;
     EditText searchText;
+    FloatingActionButton fabMenu;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +29,7 @@ public class SearchEngine extends Activity {
         naverSearch = (Button) findViewById(R.id.naver_button);
         daumSearch = (Button) findViewById(R.id.daum_button);
         searchText = (EditText) findViewById(R.id.search_text);
+        fabMenu = (FloatingActionButton) findViewById(R.id.fabMenu);
 
         daumSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +74,13 @@ public class SearchEngine extends Activity {
                     intent.setData(Uri.parse("http://m.search.naver.com/search.naver?query=" + query));
                     startActivity(intent);
                 }
+            }
+        });
+
+        fabMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "플로팅 버튼 클릭 완료", Toast.LENGTH_LONG).show();
             }
         });
 

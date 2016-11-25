@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -41,7 +42,7 @@ public class NoticeBoard extends AppCompatActivity {
     Button updateListButton;
     int posForUpdate;
     String allTitle;
-
+    FloatingActionButton fabMenu;
 
     int num = 1;
     SharedPreferences mPref;
@@ -56,6 +57,7 @@ public class NoticeBoard extends AppCompatActivity {
         addListButton = (Button) findViewById(R.id.addListButton);
         delListButton = (Button) findViewById(R.id.delListButton);
         updateListButton = (Button) findViewById(R.id.updateListButton);
+        fabMenu = (FloatingActionButton) findViewById(R.id.fabMenu);
 
         final ArrayList<Integer> list = new ArrayList<Integer>();
 
@@ -219,26 +221,13 @@ public class NoticeBoard extends AppCompatActivity {
             }
         });
 
-//        listView01.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                if ( ((IconTextItem) adapter.getItem(position)).ismSelectValid() ) {
-//                    if (position % 2 == 0) {
-//                        view.setBackgroundColor(Color.parseColor("#D9E5FF"));
-//                    } else if (position % 2 == 1) {
-//                        view.setBackgroundColor(Color.parseColor("#B2CCFF"));
-//                    }
-//                    ((IconTextItem) adapter.getItem(position)).setmSelectValid(false);
-//                } else {
-//                    view.setBackgroundColor(Color.parseColor("#EAEAEA"));
-//                    ((IconTextItem) adapter.getItem(position)).setmSelectValid(true);
-//                }
-//            }
-//        });
+        fabMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "플로팅 버튼 클릭 완료", Toast.LENGTH_LONG).show();
+            }
+        });
     }
-
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

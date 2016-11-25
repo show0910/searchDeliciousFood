@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ public class SearchYouTube extends Activity {
     ArrayList<SearchYoutubeData> ydata = new ArrayList<SearchYoutubeData>();
     ComFunction cf = new ComFunction();
     KeySet key = new KeySet();
+    FloatingActionButton fabMenu;
 
     String prevPageToken;
     String nextPageToken;
@@ -65,6 +67,7 @@ public class SearchYouTube extends Activity {
         Button search = (Button) findViewById(R.id.search);
         Button prevPage = (Button) findViewById(R.id.prevPage);
         Button nextPage = (Button) findViewById(R.id.nextPage);
+        fabMenu = (FloatingActionButton) findViewById(R.id.fabMenu);
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +109,13 @@ public class SearchYouTube extends Activity {
                 }
                 buttonValid = 2;
                 searchTask = new searchTask().execute();
+            }
+        });
+
+        fabMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "플로팅 버튼 클릭 완료", Toast.LENGTH_LONG).show();
             }
         });
 

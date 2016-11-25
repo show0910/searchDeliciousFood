@@ -1,49 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#D9E5FF">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="120"
-        android:background="#D9E5FF">
+        android:layout_height="fill_parent">
 
-        <EditText
-            android:id="@+id/search_text"
+        <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="120"
+                android:background="#D9E5FF">
+
+                <EditText
+                    android:id="@+id/search_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="키워드를 입력하세요"
+                    android:textColor="#000000"
+                    android:textStyle="bold"></EditText>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#D9E5FF"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/naver_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/naver" />
+
+                <Button
+                    android:id="@+id/daum_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/daum" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabMenu"
+            android:layout_width="95dp"
             android:layout_height="wrap_content"
-            android:hint="키워드를 입력하세요"
-            android:textColor="#000000"
-            android:textStyle="bold"></EditText>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#D9E5FF"
-        android:layout_weight="1">
-
-        <Button
-            android:id="@+id/naver_button"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/naver" />
-
-        <Button
-            android:id="@+id/daum_button"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/daum" />
-
-    </LinearLayout>
-
-
+            android:src="@drawable/ic_add_entry"
+            app:elevation="4dp"
+            app:backgroundTint="@color/colorAccent"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="70dp" />
+    </FrameLayout>
 </LinearLayout>

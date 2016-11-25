@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -78,6 +79,7 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
     TextView txtView1;
     LinearLayout layout1;
     TextView mainBanner;
+    FloatingActionButton fabMenu;
 
     MapPOIItem poiItemHome;
     MapPOIItem poiItemTarget;
@@ -100,6 +102,8 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
         txtView1 = (TextView) findViewById(R.id.txtView1);
         layout1 = (LinearLayout) findViewById(R.id.layout1);
         mainBanner = (TextView) findViewById(R.id.main_banner);
+
+        fabMenu = (FloatingActionButton) findViewById(R.id.fabMenu);
 
 
         MapLayout mapLayout = new MapLayout(this);
@@ -210,6 +214,14 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
                 startActivity(intent);
             }
         });
+
+        fabMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "플로팅 버튼 클릭 완료", Toast.LENGTH_LONG).show();
+            }
+        });
+
 
         Handler handler = new Handler() {
             @Override
