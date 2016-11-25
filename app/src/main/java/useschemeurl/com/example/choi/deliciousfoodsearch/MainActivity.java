@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         aniSearchEngineBak = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.set_search_engine_bak);
         aniEventBoardBak = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.set_event_board_bak);
 
+
+        mainLayout.getBackground().setAlpha(255);
 
         //다음지도 호출
         daumSearchButton.setOnClickListener(new View.OnClickListener() {
@@ -294,6 +297,12 @@ public class MainActivity extends AppCompatActivity {
             eventButton.startAnimation(aniEventBoardBak);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "맛집 나와!를 종료합니다.", Toast.LENGTH_SHORT).show();
+        super.onBackPressed();
     }
 
 }

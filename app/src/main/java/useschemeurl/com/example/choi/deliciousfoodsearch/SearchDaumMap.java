@@ -1,6 +1,7 @@
 package useschemeurl.com.example.choi.deliciousfoodsearch;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,6 +22,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,6 +83,13 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
     LinearLayout layout1;
     TextView mainBanner;
     FloatingActionButton fabMenu;
+    FloatingActionButton fabMenuFirst;
+    FloatingActionButton fabMenuSecond;
+    FloatingActionButton fabMenuThird;
+    FloatingActionButton fabMenuForth;
+    Animation aniMainMenu;
+    Animation aniMainMenuBak;
+    boolean fabMenuValid;
 
     MapPOIItem poiItemHome;
     MapPOIItem poiItemTarget;
@@ -102,9 +112,19 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
         txtView1 = (TextView) findViewById(R.id.txtView1);
         layout1 = (LinearLayout) findViewById(R.id.layout1);
         mainBanner = (TextView) findViewById(R.id.main_banner);
-
         fabMenu = (FloatingActionButton) findViewById(R.id.fabMenu);
+        fabMenuFirst = (FloatingActionButton) findViewById(R.id.fabMenuFirst);
+        fabMenuSecond = (FloatingActionButton) findViewById(R.id.fabMenuSecond);
+        fabMenuThird = (FloatingActionButton) findViewById(R.id.fabMenuThird);
+        fabMenuForth = (FloatingActionButton) findViewById(R.id.fabMenuForth);
 
+        aniMainMenu = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_main_menu);
+        aniMainMenuBak = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_main_menu_bak);
+
+        fabMenuFirst.setVisibility(View.INVISIBLE);
+        fabMenuSecond.setVisibility(View.INVISIBLE);
+        fabMenuThird.setVisibility(View.INVISIBLE);
+        fabMenuForth.setVisibility(View.INVISIBLE);
 
         MapLayout mapLayout = new MapLayout(this);
         mMapView = mapLayout.getMapView();
@@ -126,6 +146,7 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
         if (getIntent().getStringExtra("usage").equals("address")) {
             txtView1.setVisibility(View.GONE);
             layout1.setVisibility(View.GONE);
+            fabMenu.setVisibility(View.GONE);
             mainBanner.setText("가게이름&주소 찾기");
         }
 
@@ -215,53 +236,134 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
             }
         });
 
+        fabMenuValid = true;
+
         fabMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "플로팅 버튼 클릭 완료", Toast.LENGTH_LONG).show();
+
+                if (fabMenuValid) {
+                    fabMenu.startAnimation(aniMainMenu);
+                } else {
+                    fabMenu.startAnimation(aniMainMenuBak);
+                }
             }
         });
 
-
-        Handler handler = new Handler() {
+        aniMainMenu.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 0) {
-                    currentButton.callOnClick();
-                }
+            public void onAnimationStart(Animation animation) {
+
+                fabMenuFirst.setVisibility(View.VISIBLE);
+                fabMenuSecond.setVisibility(View.VISIBLE);
+                fabMenuThird.setVisibility(View.VISIBLE);
+                fabMenuForth.setVisibility(View.VISIBLE);
+
+                ObjectAnimator moverFirst = ObjectAnimator.ofFloat(fabMenuFirst, "translationY", 0, -1050);
+                moverFirst.setDuration(1000);
+                moverFirst.start();
+
+                ObjectAnimator moverSecond = ObjectAnimator.ofFloat(fabMenuSecond, "translationY", 0, -800);
+                moverSecond.setDuration(1000);
+                moverSecond.start();
+
+                ObjectAnimator moverThird = ObjectAnimator.ofFloat(fabMenuThird, "translationY", 0, -550);
+                moverThird.setDuration(1000);
+                moverThird.start();
+
+                ObjectAnimator moverForth = ObjectAnimator.ofFloat(fabMenuForth, "translationY", 0, -300);
+                moverForth.setDuration(1000);
+                moverForth.start();
+
+                fabMenuValid = false;
             }
-        };
 
-        BackThread thread = new BackThread(handler);
-        thread.setDaemon(true);
-//      thread.start();
+            @Override
+            public void onAnimationEnd(Animation animation) {
 
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        aniMainMenuBak.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+                ObjectAnimator moverFirst = ObjectAnimator.ofFloat(fabMenuFirst, "translationY", 1050);
+                moverFirst.setDuration(1000);
+                moverFirst.start();
+
+                ObjectAnimator moverSecond = ObjectAnimator.ofFloat(fabMenuSecond, "translationY", 800);
+                moverSecond.setDuration(1000);
+                moverSecond.start();
+
+                ObjectAnimator moverThird = ObjectAnimator.ofFloat(fabMenuThird, "translationY", 550);
+                moverThird.setDuration(1000);
+                moverThird.start();
+
+                ObjectAnimator moverForth = ObjectAnimator.ofFloat(fabMenuForth, "translationY", 300);
+                moverForth.setDuration(1000);
+                moverForth.start();
+
+                fabMenuValid = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                fabMenuFirst.setVisibility(View.INVISIBLE);
+                fabMenuSecond.setVisibility(View.INVISIBLE);
+                fabMenuThird.setVisibility(View.INVISIBLE);
+                fabMenuForth.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        fabMenuFirst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), SearchYouTube.class);
+                startActivity(youIntent);
+                finish();
+            }
+        });
+
+        fabMenuSecond.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), NoticeBoard.class);
+                startActivity(youIntent);
+                finish();
+            }
+        });
+
+        fabMenuThird.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), SearchEngine.class);
+                startActivity(youIntent);
+                finish();
+            }
+        });
+
+        fabMenuForth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), EventBoard.class);
+                startActivity(youIntent);
+                finish();
+            }
+        });
 
     } //end onCreate Class
-
-    //10초마다 현재위치 찾아주는 것 사용안함
-    class BackThread extends Thread {
-        Handler handler;
-
-        BackThread(Handler handler) {
-            this.handler = handler;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                Message msg = new Message();
-                msg.what = 0;
-                handler.sendMessage(msg);
-
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     public void currentClick(View v) {
         Toast.makeText(getApplicationContext(), "현재 위치 찾기가 시작되었습니다.", Toast.LENGTH_SHORT).show();

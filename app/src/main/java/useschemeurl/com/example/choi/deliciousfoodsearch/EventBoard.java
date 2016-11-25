@@ -1,19 +1,22 @@
 package useschemeurl.com.example.choi.deliciousfoodsearch;
 
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import useschemeurl.com.example.choi.deliciousfoodsearch.board.IconTextItem;
 import useschemeurl.com.example.choi.deliciousfoodsearch.event.EventTextItem;
 import useschemeurl.com.example.choi.deliciousfoodsearch.event.EventTextListAdapter;
 
@@ -34,6 +37,14 @@ public class EventBoard extends AppCompatActivity {
     Button updateListButton;
     int posForUpdate;
     String allTitle;
+    FloatingActionButton fabMenu;
+    FloatingActionButton fabMenuFirst;
+    FloatingActionButton fabMenuSecond;
+    FloatingActionButton fabMenuThird;
+    FloatingActionButton fabMenuForth;
+    Animation aniMainMenu;
+    Animation aniMainMenuBak;
+    boolean fabMenuValid;
 
     SharedPreferences mPref;
     SharedPreferences.Editor editor;
@@ -49,6 +60,21 @@ public class EventBoard extends AppCompatActivity {
         addListButton = (Button) findViewById(R.id.addListButton);
         delListButton = (Button) findViewById(R.id.delListButton);
         updateListButton = (Button) findViewById(R.id.updateListButton);
+        fabMenu = (FloatingActionButton) findViewById(R.id.fabMenu);
+        fabMenuFirst = (FloatingActionButton) findViewById(R.id.fabMenuFirst);
+        fabMenuSecond = (FloatingActionButton) findViewById(R.id.fabMenuSecond);
+        fabMenuThird = (FloatingActionButton) findViewById(R.id.fabMenuThird);
+        fabMenuForth = (FloatingActionButton) findViewById(R.id.fabMenuForth);
+
+        aniMainMenu = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_main_menu);
+        aniMainMenuBak = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_main_menu_bak);
+
+        fabMenuFirst.setVisibility(View.INVISIBLE);
+        fabMenuSecond.setVisibility(View.INVISIBLE);
+        fabMenuThird.setVisibility(View.INVISIBLE);
+        fabMenuForth.setVisibility(View.INVISIBLE);
+
+
 
         mPref = getSharedPreferences("searchDeliciousEventBoard", MODE_PRIVATE);
         editor = mPref.edit();
@@ -201,13 +227,140 @@ public class EventBoard extends AppCompatActivity {
                 alert.show();
             }
         });
+
+        fabMenuValid = true;
+
+        fabMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (fabMenuValid) {
+                    fabMenu.startAnimation(aniMainMenu);
+                } else {
+                    fabMenu.startAnimation(aniMainMenuBak);
+                }
+            }
+        });
+
+        aniMainMenu.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+                fabMenuFirst.setVisibility(View.VISIBLE);
+                fabMenuSecond.setVisibility(View.VISIBLE);
+                fabMenuThird.setVisibility(View.VISIBLE);
+                fabMenuForth.setVisibility(View.VISIBLE);
+
+                ObjectAnimator moverFirst = ObjectAnimator.ofFloat(fabMenuFirst, "translationY", 0, -1050);
+                moverFirst.setDuration(1000);
+                moverFirst.start();
+
+                ObjectAnimator moverSecond = ObjectAnimator.ofFloat(fabMenuSecond, "translationY", 0, -800);
+                moverSecond.setDuration(1000);
+                moverSecond.start();
+
+                ObjectAnimator moverThird = ObjectAnimator.ofFloat(fabMenuThird, "translationY", 0, -550);
+                moverThird.setDuration(1000);
+                moverThird.start();
+
+                ObjectAnimator moverForth = ObjectAnimator.ofFloat(fabMenuForth, "translationY", 0, -300);
+                moverForth.setDuration(1000);
+                moverForth.start();
+
+                fabMenuValid = false;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        aniMainMenuBak.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+                ObjectAnimator moverFirst = ObjectAnimator.ofFloat(fabMenuFirst, "translationY", 1050);
+                moverFirst.setDuration(1000);
+                moverFirst.start();
+
+                ObjectAnimator moverSecond = ObjectAnimator.ofFloat(fabMenuSecond, "translationY", 800);
+                moverSecond.setDuration(1000);
+                moverSecond.start();
+
+                ObjectAnimator moverThird = ObjectAnimator.ofFloat(fabMenuThird, "translationY", 550);
+                moverThird.setDuration(1000);
+                moverThird.start();
+
+                ObjectAnimator moverForth = ObjectAnimator.ofFloat(fabMenuForth, "translationY", 300);
+                moverForth.setDuration(1000);
+                moverForth.start();
+
+                fabMenuValid = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                fabMenuFirst.setVisibility(View.INVISIBLE);
+                fabMenuSecond.setVisibility(View.INVISIBLE);
+                fabMenuThird.setVisibility(View.INVISIBLE);
+                fabMenuForth.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        fabMenuFirst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), SearchDaumMap.class);
+                youIntent.putExtra("usage", "origin");
+                startActivity(youIntent);
+                finish();
+            }
+        });
+
+        fabMenuSecond.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), SearchYouTube.class);
+                startActivity(youIntent);
+                finish();
+            }
+        });
+
+        fabMenuThird.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), NoticeBoard.class);
+                startActivity(youIntent);
+                finish();
+            }
+        });
+
+        fabMenuForth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), SearchEngine.class);
+                startActivity(youIntent);
+                finish();
+            }
+        });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_INSERT && resultCode == RESULT_OK) {
-
 
             String title = data.getStringExtra("title");
             String address = data.getStringExtra("address");
@@ -260,9 +413,6 @@ public class EventBoard extends AppCompatActivity {
 
             editor.putString(title, saveStr);
             editor.commit();
-
         }
     }
-
-
 }

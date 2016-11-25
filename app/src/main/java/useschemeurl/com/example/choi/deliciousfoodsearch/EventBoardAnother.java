@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -76,6 +78,7 @@ public class EventBoardAnother extends AppCompatActivity {
         if (getIntent().getStringExtra("usage").equals("view")) {
             inputButton.setVisibility(View.GONE);
             findMapButton.setVisibility(View.GONE);
+
             editTitle.setFocusableInTouchMode(false);
             editAddress.setFocusableInTouchMode(false);
             cmbTime.setEnabled(false);

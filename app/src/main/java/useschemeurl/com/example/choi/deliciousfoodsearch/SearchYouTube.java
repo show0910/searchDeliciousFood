@@ -1,5 +1,6 @@
 package useschemeurl.com.example.choi.deliciousfoodsearch;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -51,6 +54,13 @@ public class SearchYouTube extends Activity {
     ComFunction cf = new ComFunction();
     KeySet key = new KeySet();
     FloatingActionButton fabMenu;
+    FloatingActionButton fabMenuFirst;
+    FloatingActionButton fabMenuSecond;
+    FloatingActionButton fabMenuThird;
+    FloatingActionButton fabMenuForth;
+    Animation aniMainMenu;
+    Animation aniMainMenuBak;
+    boolean fabMenuValid;
 
     String prevPageToken;
     String nextPageToken;
@@ -68,6 +78,18 @@ public class SearchYouTube extends Activity {
         Button prevPage = (Button) findViewById(R.id.prevPage);
         Button nextPage = (Button) findViewById(R.id.nextPage);
         fabMenu = (FloatingActionButton) findViewById(R.id.fabMenu);
+        fabMenuFirst = (FloatingActionButton) findViewById(R.id.fabMenuFirst);
+        fabMenuSecond = (FloatingActionButton) findViewById(R.id.fabMenuSecond);
+        fabMenuThird = (FloatingActionButton) findViewById(R.id.fabMenuThird);
+        fabMenuForth = (FloatingActionButton) findViewById(R.id.fabMenuForth);
+
+        aniMainMenu = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_main_menu);
+        aniMainMenuBak = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_main_menu_bak);
+
+        fabMenuFirst.setVisibility(View.INVISIBLE);
+        fabMenuSecond.setVisibility(View.INVISIBLE);
+        fabMenuThird.setVisibility(View.INVISIBLE);
+        fabMenuForth.setVisibility(View.INVISIBLE);
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,16 +134,137 @@ public class SearchYouTube extends Activity {
             }
         });
 
+        fabMenuValid = true;
+
         fabMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "플로팅 버튼 클릭 완료", Toast.LENGTH_LONG).show();
+
+                if (fabMenuValid) {
+                    fabMenu.startAnimation(aniMainMenu);
+                } else {
+                    fabMenu.startAnimation(aniMainMenuBak);
+                }
+            }
+        });
+
+        aniMainMenu.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+                fabMenuFirst.setVisibility(View.VISIBLE);
+                fabMenuSecond.setVisibility(View.VISIBLE);
+                fabMenuThird.setVisibility(View.VISIBLE);
+                fabMenuForth.setVisibility(View.VISIBLE);
+
+                ObjectAnimator moverFirst = ObjectAnimator.ofFloat(fabMenuFirst, "translationY", 0, -1050);
+                moverFirst.setDuration(1000);
+                moverFirst.start();
+
+                ObjectAnimator moverSecond = ObjectAnimator.ofFloat(fabMenuSecond, "translationY", 0, -800);
+                moverSecond.setDuration(1000);
+                moverSecond.start();
+
+                ObjectAnimator moverThird = ObjectAnimator.ofFloat(fabMenuThird, "translationY", 0, -550);
+                moverThird.setDuration(1000);
+                moverThird.start();
+
+                ObjectAnimator moverForth = ObjectAnimator.ofFloat(fabMenuForth, "translationY", 0, -300);
+                moverForth.setDuration(1000);
+                moverForth.start();
+
+                fabMenuValid = false;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        aniMainMenuBak.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+                ObjectAnimator moverFirst = ObjectAnimator.ofFloat(fabMenuFirst, "translationY", 1050);
+                moverFirst.setDuration(1000);
+                moverFirst.start();
+
+                ObjectAnimator moverSecond = ObjectAnimator.ofFloat(fabMenuSecond, "translationY", 800);
+                moverSecond.setDuration(1000);
+                moverSecond.start();
+
+                ObjectAnimator moverThird = ObjectAnimator.ofFloat(fabMenuThird, "translationY", 550);
+                moverThird.setDuration(1000);
+                moverThird.start();
+
+                ObjectAnimator moverForth = ObjectAnimator.ofFloat(fabMenuForth, "translationY", 300);
+                moverForth.setDuration(1000);
+                moverForth.start();
+
+                fabMenuValid = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                fabMenuFirst.setVisibility(View.INVISIBLE);
+                fabMenuSecond.setVisibility(View.INVISIBLE);
+                fabMenuThird.setVisibility(View.INVISIBLE);
+                fabMenuForth.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        fabMenuFirst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), SearchDaumMap.class);
+                youIntent.putExtra("usage", "origin");
+                startActivity(youIntent);
+                finish();
+            }
+        });
+
+        fabMenuSecond.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), NoticeBoard.class);
+                startActivity(youIntent);
+                finish();
+            }
+        });
+
+        fabMenuThird.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), SearchEngine.class);
+                startActivity(youIntent);
+                finish();
+            }
+        });
+
+        fabMenuForth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent youIntent = new Intent(getApplicationContext(), EventBoard.class);
+                startActivity(youIntent);
+                finish();
             }
         });
 
         initData();
 
-    }
+    } //end onCreate Class
 
     //키보드 숨기기
     private void hideSoftKeyboard() {

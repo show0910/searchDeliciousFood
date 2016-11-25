@@ -80,14 +80,51 @@
             android:id="@+id/fabMenu"
             android:layout_width="95dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_entry"
+            android:src="@drawable/fork_knife_floating"
             app:elevation="4dp"
             app:backgroundTint="@color/colorAccent"
             android:layout_gravity="bottom|end"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="70dp" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabMenuFirst"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/map_floating"
+            app:backgroundTint="#FFE400"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="70dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabMenuSecond"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/youtube_floating"
+            app:backgroundTint="#FF0000"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="70dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabMenuThird"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/board_floating"
+            app:backgroundTint="#1DDB16"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="70dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabMenuForth"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search_floating"
+            app:backgroundTint="#2478FF"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="70dp" />
     </FrameLayout>
-
-
 </LinearLayout>
