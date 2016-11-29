@@ -1,6 +1,9 @@
 package useschemeurl.com.example.choi.deliciousfoodsearch;
 
 import android.animation.ObjectAnimator;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import useschemeurl.com.example.choi.deliciousfoodsearch.event.EventTextItem;
 import useschemeurl.com.example.choi.deliciousfoodsearch.event.EventTextListAdapter;
@@ -74,8 +78,6 @@ public class EventBoard extends AppCompatActivity {
         fabMenuThird.setVisibility(View.INVISIBLE);
         fabMenuForth.setVisibility(View.INVISIBLE);
 
-
-
         mPref = getSharedPreferences("searchDeliciousEventBoard", MODE_PRIVATE);
         editor = mPref.edit();
 
@@ -102,6 +104,12 @@ public class EventBoard extends AppCompatActivity {
                 String contents = others[4];
 
                 adapter.addItem(new EventTextItem(title, address, time, contents, hour, shopName));
+
+//                알람 등록
+//                AlarmHATT am = new AlarmHATT(getApplicationContext());
+//
+//                am.AlarmSet();
+
             }
             listView01.setAdapter(adapter);
         }
@@ -262,10 +270,10 @@ public class EventBoard extends AppCompatActivity {
                 ObjectAnimator moverThird = ObjectAnimator.ofFloat(fabMenuThird, "translationY", 0, -550);
                 moverThird.setDuration(1000);
                 moverThird.start();
-
                 ObjectAnimator moverForth = ObjectAnimator.ofFloat(fabMenuForth, "translationY", 0, -300);
                 moverForth.setDuration(1000);
                 moverForth.start();
+
 
                 fabMenuValid = false;
             }
@@ -415,4 +423,55 @@ public class EventBoard extends AppCompatActivity {
             editor.commit();
         }
     }
+
+    public class AlarmHATT {
+        private Context context;
+        private int year;
+        private int month;
+        private int date;
+        private int hour;
+        private int min;
+        private int second;
+
+        public AlarmHATT(Context context) {
+            this.context = context;
+        }
+
+        public AlarmHATT(Context context, String year, String month, String date, String hour, String min, String second) {
+            this.context = context;
+            this.year = Integer.parseInt(year);
+            this.month = Integer.parseInt(month);
+            this.date = Integer.parseInt(date);
+            this.hour = Integer.parseInt(hour);
+            this.min = Integer.parseInt(min);
+            this.second = Integer.parseInt(second);
+        }
+
+        public void AlarmSet() {
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(context, AlarmDefine.class);
+
+            PendingIntent sender = PendingIntent.getBroadcast(EventBoard.this, 121, intent, 0);
+
+            Calendar calendar = Calendar.getInstance();
+
+            //알람시간 calendar에 set해주기
+            calendar.set(year, month, date, hour, min, second);
+
+            //알람 예약
+            am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+        }
+
+        public void AlarmCancel() {
+            Intent intent = new Intent();
+            PendingIntent sender = PendingIntent.getBroadcast(context, 121, intent, 0);
+
+            AlarmManager manager =
+                    (AlarmManager) context
+                            .getSystemService(Context.ALARM_SERVICE);
+
+            manager.cancel(sender);
+        }
+    }
+
 }

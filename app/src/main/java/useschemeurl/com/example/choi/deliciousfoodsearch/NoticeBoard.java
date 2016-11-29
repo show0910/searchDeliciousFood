@@ -407,7 +407,6 @@ public class NoticeBoard extends AppCompatActivity {
 
             editor.commit();
 
-            Toast.makeText(getApplicationContext(), "Data 입력 완료", Toast.LENGTH_SHORT).show();
         } else if (requestCode == REQUEST_CODE_UPDATE && resultCode == RESULT_OK) {
 
             String[] curData = new String[2];

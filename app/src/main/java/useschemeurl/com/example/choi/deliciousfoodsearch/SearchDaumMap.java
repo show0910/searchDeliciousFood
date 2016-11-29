@@ -63,6 +63,10 @@ import useschemeurl.com.example.choi.deliciousfoodsearch.search.Searcher;
 
 public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthenticationResultListener, MapView.MapViewEventListener, MapView.POIItemEventListener {
 
+    public static final int REQUEST_CODE_ROAD_CAR = 1001;
+    public static final int REQUEST_CODE_ROAD_BUS = 1002;
+    public static final int REQUEST_CODE_ROAD_WALK = 1003;
+
     private MapView mMapView;
     double currentLatitude = 0;
     double currentLongitude = 0;
@@ -211,7 +215,7 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
             public void onClick(View v) {
                 String url = "daummaps://route?sp=" + currentLatitude + "," + currentLongitude + "&ep=" + targetLatitude + "," + targetLongitude + "&by=CAR";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_ROAD_CAR);
             }
         });
 
@@ -221,7 +225,7 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
             public void onClick(View v) {
                 String url = "daummaps://route?sp=" + currentLatitude + "," + currentLongitude + "&ep=" + targetLatitude + "," + targetLongitude + "&by=PUBLICTRANSIT";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_ROAD_BUS);
             }
         });
 
@@ -232,7 +236,7 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
             public void onClick(View v) {
                 String url = "daummaps://route?sp=" + currentLatitude + "," + currentLongitude + "&ep=" + targetLatitude + "," + targetLongitude + "&by=FOOT";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_ROAD_WALK);
             }
         });
 
@@ -363,10 +367,11 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
             }
         });
 
+        checkDangerousPermissions();
+
     } //end onCreate Class
 
     public void currentClick(View v) {
-        Toast.makeText(getApplicationContext(), "현재 위치 찾기가 시작되었습니다.", Toast.LENGTH_SHORT).show();
 
         //GPS로부터 현재위치 가지고 오는 메소드
         if (startLocationService() == 1) {
@@ -668,11 +673,11 @@ public class SearchDaumMap extends Activity implements MapView.OpenAPIKeyAuthent
     @Override
     protected void onPause() {
         super.onPause();
-
-        Intent resultIntent = getIntent();
-
-        setResult(RESULT_OK, resultIntent);
-        finish();
+        if (getIntent().getStringExtra("usage").equals("address")) {
+            Intent resultIntent = getIntent();
+            setResult(RESULT_OK, resultIntent);
+            finish();
+        }
     }
 
     @Override

@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 //        로딩화면
-//        startActivity(new Intent(this, FrontScreenActivity.class));
-//
-//        Drawable alpha = findViewById(R.id.activity_main).getBackground();
-//        alpha.setAlpha(220);
+        startActivity(new Intent(this, FrontScreenActivity.class));
+
+        Drawable alpha = findViewById(R.id.activity_main).getBackground();
+        alpha.setAlpha(220);
 
         mainLayout = (LinearLayout) findViewById(R.id.activity_main);
         daumSearchButton = (Button) findViewById(R.id.daum_search_button);

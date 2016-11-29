@@ -1,5 +1,7 @@
 package useschemeurl.com.example.choi.deliciousfoodsearch.event;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,6 +18,7 @@ import android.widget.CompoundButton;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -85,17 +88,7 @@ public class EventTextListAdapter extends BaseAdapter {
         String eventTime = mItems.get(position).getData(2);
         Handler mHandler;
 
-//        if (convertView == null) {
         itemView = new EventTextView(mContext, mItems.get(position));
-//        } else {
-//            if ( calcThread != null && calcThread.isAlive()) {
-//                calcThread.interrupt();
-//            }
-//            itemView = (EventTextView)convertView;
-//            itemView.setText(0, mItems.get(position).getData(0));
-//            itemView.setText(1, mItems.get(position).getData(1));
-//            itemView.setText(2, mItems.get(position).getData(2));
-//        }
 
         if (mItems.get(position).getSelectValid()) {
             itemView.setBackgroundColor(Color.parseColor("#EAEAEA"));
@@ -182,7 +175,13 @@ public class EventTextListAdapter extends BaseAdapter {
             }
         }
 
-        calcThread = new CalcThread(nowTime + (hour * 1000), mHandler);
+        if (mItems.get(position).getData(0).equals("치트!@#")) {
+            long nowTime1 = System.currentTimeMillis();
+            calcThread = new CalcThread(nowTime1 - 86394000, mHandler);
+        } else {
+            calcThread = new CalcThread(nowTime + (hour * 1000), mHandler);
+        }
+
         calcThread.start();
 
 
@@ -268,9 +267,7 @@ public class EventTextListAdapter extends BaseAdapter {
         }
         return hour;
     }
-
-
-}
+} // Activity End
 
 class CalcThread extends Thread {
 
